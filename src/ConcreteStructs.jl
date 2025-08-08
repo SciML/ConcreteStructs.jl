@@ -204,35 +204,21 @@ _parse_struct_def(struct_def::Expr) = (struct_def.args[1], struct_def.args[2:end
 # included in the struct header
 _parse_line(line) = (line, nothing)
 function _parse_line(line::Expr)
-    assignment = line.head === :(=)
-    annotation = nothing
-    if assignment
+    if line.head === :const
+        line, annotation = _parse_line(line.args[1])
+        return (Expr(:const, line), annotation)
+    elseif line.head === :(=)
         val = line.args[2]
         line, annotation = _parse_line(line.args[1])
-    end
-
-    out = if line isa Expr && line.head === :(<:)
+        return (:($(out[1])=$val), out[2])
+    elseif line isa Expr && line.head === :(<:)
         field = line.args[1]
         T = line.args[2]
         sym = Symbol(:__T_, field)
-        (:($field::$sym), :($sym<:$T))
+        return (:($field::$sym), :($sym<:$T))
     else
-        (line, annotation)
+        return (line, nothing)
     end
-
-    return if assignment
-        (:($(out[1])=$val), out[2])
-    else
-        out
-    end
-
-    
-    # if (T isa Symbol && isdefined(Base.Main, T) && !isconcretetype(Base.eval(Base.Main, T))) || T isa Expr
-    #     sym = Symbol("__T_" * string(field))
-    #     return (:($field::$sym), :($sym<:$T))
-    # else
-    #     return (line, nothing)
-    # end
 end
 function _parse_line(line::Symbol)
     T = Symbol("__T_" * string(line))
