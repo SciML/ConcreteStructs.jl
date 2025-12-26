@@ -1,10 +1,11 @@
 using Documenter
+using Documenter.Remotes: GitHub
 using ConcreteStructs
 
 makedocs(
     modules = [ConcreteStructs],
     sitename = "ConcreteStructs.jl",
-    pages =[
+    pages = [
         "Home" => "index.md",
         "Walkthrough" => "walkthrough.md",
         "API" => "api.md",
@@ -12,9 +13,9 @@ makedocs(
     format = Documenter.HTML(
         canonical = "https://jonniedie.github.io/ConcreteStructs.jl/stable",
     ),
-    repo="https://github.com/jonniedie/ConcreteStructs.jl/blob/{commit}{path}#L{line}",
+    repo = GitHub("jonniedie/ConcreteStructs.jl"),
     authors = "Jonnie Diegelman",
-    assets = String[],
+    warnonly = [:missing_docs],
 )
 
 # Documenter can also automatically deploy documentation to gh-pages.
