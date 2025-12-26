@@ -14,6 +14,7 @@ makedocs(
     ],
     format = Documenter.HTML(
         canonical = "https://jonniedie.github.io/ConcreteStructs.jl/stable",
+        prettyurls = get(ENV, "CI", nothing) == "true",
     ),
     repo = GitHub("jonniedie/ConcreteStructs.jl"),
     authors = "Jonnie Diegelman",
