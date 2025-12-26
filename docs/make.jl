@@ -2,6 +2,8 @@ using Documenter
 using Documenter.Remotes: GitHub
 using ConcreteStructs
 
+DocMeta.setdocmeta!(ConcreteStructs, :DocTestSetup, :(using ConcreteStructs); recursive = true)
+
 makedocs(
     modules = [ConcreteStructs],
     sitename = "ConcreteStructs.jl",
