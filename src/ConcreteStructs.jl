@@ -73,7 +73,7 @@ macro concrete(terse, expr)
     expr, struct_name, type_params = _concretize(expr)
     struct_name = string(struct_name)
     num_params = length(type_params)
-    
+
     terse_string = if num_params == 0
         struct_name
     else
@@ -120,7 +120,7 @@ function _concretize(expr)
     constructor_expr = _make_constructor(struct_name, type_params, type_params_full, lines)
     body = Expr(:block, lines..., constructor_expr)
     struct_expr = Expr(:struct, is_mutable, head, body)
-    
+
     struct_expr = _apply_original_expr(original_expr, struct_expr)
 
     return struct_expr, struct_name, type_params
@@ -140,11 +140,7 @@ function _make_constructor(struct_name, type_params, type_params_full, lines)
     if length(type_params) == length(type_params_full) && all(type_params .== type_params_full)
         return Expr(:block)
     elseif length(constructor_params)==0
-        return :(
-            function $struct_name($(field_lines...)) where {$(type_params_full...)}
-                return new{$(new_params...)}($(vars...))
-            end
-        )
+        return Expr(:block)
     else
         return :(
             function $struct_name{$(constructor_params...)}($(field_lines...)) where {$(type_params_full...)}
@@ -200,7 +196,7 @@ function _parse_head(head::Expr)
         super = head.args[2]
         struct_name, type_params = _parse_head(head.args[1])
     end
-    
+
     return (struct_name, type_params, super)
 end
 
@@ -236,7 +232,7 @@ function _parse_line(line::Expr)
         out
     end
 
-    
+
     # if (T isa Symbol && isdefined(Base.Main, T) && !isconcretetype(Base.eval(Base.Main, T))) || T isa Expr
     #     sym = Symbol("__T_" * string(field))
     #     return (:($field::$sym), :($sym<:$T))

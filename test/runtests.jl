@@ -254,4 +254,21 @@ end
     end
     f5 = Foo5(zeros(1), 2)
     @test typeof(f5) === Foo5{Float64, Int64}
+
+    Base.@kwdef @concrete struct Foo6{T}
+        x <: Vector{T} = zeros(1)
+    end
+    @test typeof(Foo6()) === Foo6{Float64, Vector{Float64}}
+    @test typeof(Foo6(x = zeros(3))) === Foo6{Float64, Vector{Float64}}
+    @test typeof(Foo6{Int, Vector{Int}}()) === Foo6{Int, Vector{Int}}
+    @test typeof(Foo6{Int, Vector{Int}}(x = zeros(2))) === Foo6{Int, Vector{Int}}
+
+    Base.@kwdef @concrete struct Foo7{T}
+        x::Vector{T} = zeros(2)
+        y = 0.0
+    end
+    @test typeof(Foo7()) === Foo7{Float64, Float64}
+    @test typeof(Foo7{Int, Int}()) === Foo7{Int, Int}
+    @test typeof(Foo7(y = zeros(2))) === Foo7{Float64, Vector{Float64}}
+    @test typeof(Foo7{Int, Vector{Int}}(x = zeros(2), y = zeros(2))) === Foo7{Int, Vector{Int}}
 end
