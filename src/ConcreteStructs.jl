@@ -21,7 +21,7 @@ type parameters. The `terse` keyword causes the types to show without their para
 in `:compact => true` mode of an `IOContext`.
 
 ## Examples
-```julia
+```jldoctest
 julia> using ConcreteStructs
 
 julia> @concrete struct AB
@@ -30,7 +30,7 @@ julia> @concrete struct AB
        end
 
 julia> ab = AB("hi", 1+im)
-AB{String,Complex{Int64}}("hi", 1 + 1im)
+AB{String, Complex{Int64}}("hi", 1 + 1im)
 
 julia> @concrete terse mutable struct CDE{D} <: Number
             d::D
@@ -39,10 +39,10 @@ julia> @concrete terse mutable struct CDE{D} <: Number
         end
 
 julia> cde = CDE(1f0, (1,2.0), :yo)
-CDE(1.0f0, (1, 2.0), :yo)
+CDE{Float32}(1.0f0, (1, 2.0), :yo)
 
 julia> typeof(cde)
-CDE{Float32,Tuple{Int64,Float64}}
+CDE{Float32,Tuple{Int64, Float64}}
 
 julia> @concrete terse struct FGH{T,N,G<:AbstractArray{T,N}} <: AbstractArray{T,N}
            f
@@ -50,16 +50,18 @@ julia> @concrete terse struct FGH{T,N,G<:AbstractArray{T,N}} <: AbstractArray{T,
            h::T
        end
 
-julia> Base.size(x::FGH) = size(x.g); Base.getindex(x::FGH, i...) = getindex(x.g[i...])
+julia> Base.size(x::FGH) = size(x.g);
+
+julia> Base.getindex(x::FGH, i...) = getindex(x.g[i...]);
 
 julia> fgh = FGH(nothing, [1,2,3], 4)
-3-element FGH:
+3-element FGH{Int64,1,Vector{Int64}}:
  1
  2
  3
 
 julia> typeof(fgh)
-FGH{Int64,1,Array{Int64,1},Nothing}
+FGH{Int64,1,Vector{Int64},Nothing}
 ```
 """
 macro concrete(expr)
