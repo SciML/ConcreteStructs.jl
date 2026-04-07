@@ -56,6 +56,8 @@ subtype_annotated_assignment = :(a<:Real=2.0)
         @test _strip_super(struct_name) == struct_name
         @test _strip_super(kitchen_sink) == :(MyStruct{T1, T2<:AbstractVector{T1}})
         @test _strip_super([struct_name, sub_typed]) == [struct_name, :(MyStruct{D})]
+        @test _strip_super(:(Vector{T})) == [:T]
+        @test _strip_super(:(Vector{Vector{T}})) == [:T]
     end
 
     @testset "_get_subparams" begin
@@ -64,9 +66,12 @@ subtype_annotated_assignment = :(a<:Real=2.0)
     end
 
     @testset "_get_constructor_params" begin
-        @test _get_constructor_params([:T, :(A<:AbstractVector{T})], [:A, :B]) == []
-        @test _get_constructor_params([:iip, :T, :(A<:AbstractVector{T})], [:A, :B]) == [:iip]
-        @test _get_constructor_params([:iip, :T, :(A<:AbstractVector{T}), :B], [:B]) == [:iip, :A]
+        @test _get_constructor_params([:T, :(A<:AbstractVector{T})], [:T, :(A<:AbstractVector{T})], [:A, :B]) == []
+        @test _get_constructor_params([:iip, :T, :(A<:AbstractVector{T})], [:iip, :T, :(A<:AbstractVector{T})], [:A, :B]) == [:iip]
+        @test _get_constructor_params([:iip, :T, :(A<:AbstractVector{T}), :B], [:iip, :T, :(A<:AbstractVector{T}), :B], [:B]) == [:iip, :A]
+        @test _get_constructor_params([:T], [:T], [:(Vector{T}), :A]) == []
+        @test _get_constructor_params([:T], [:T], [:(Vector{Vector{T}}), :A]) == []
+        @test _get_constructor_params([:T], [:T, :(A <: Vector{T})], [:A]) == []
     end
 end
 
@@ -234,4 +239,19 @@ end
     end
     terse_kw_def = TerseKWDef(b = false)
     @test typeof(terse_kw_def) === TerseKWDef{Float64, Bool}
+end
+
+@testset "Issue #18" begin
+    @concrete struct Foo4{T}
+        x <: Vector{T}
+    end
+    f4 = Foo4(zeros(1))
+    @test typeof(f4) === Foo4{Float64, Vector{Float64}}
+
+    @concrete struct Foo5{T}
+        x::Vector{T}
+        y
+    end
+    f5 = Foo5(zeros(1), 2)
+    @test typeof(f5) === Foo5{Float64, Int64}
 end
