@@ -19,6 +19,7 @@ kitchen_sink = :(MyStruct{T1, T2<:AbstractVector{T1}} <: AbstractVector{T1})
 plain_assignment = :(a=1)
 annotated_assignment = :(a::Float64=2.0)
 subtype_annotated_assignment = :(a<:Real=2.0)
+const_variable = Expr(:const, :a)
 
 
 # Run tests
@@ -39,6 +40,7 @@ subtype_annotated_assignment = :(a<:Real=2.0)
         @test _parse_line(annotated_assignment)[2] === nothing
         @test _parse_line(subtype_annotated_assignment)[1].head == :(=)
         @test _parse_line(subtype_annotated_assignment)[2].args[2] == :Real
+        @test _parse_line(const_variable)[1].head == :const
     end
 
     @testset "_parse_struct_def" begin
