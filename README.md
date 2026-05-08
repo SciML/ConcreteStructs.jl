@@ -7,16 +7,16 @@
 
 
 [docs-dev-img]: https://img.shields.io/badge/docs-latest-blue.svg
-[docs-dev-url]: https://jonniedie.github.io/ConcreteStructs.jl/dev
+[docs-dev-url]: https://SciML.github.io/ConcreteStructs.jl/dev
 
 [docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
-[docs-stable-url]: https://jonniedie.github.io/ConcreteStructs.jl/stable
+[docs-stable-url]: https://SciML.github.io/ConcreteStructs.jl/stable
 
-[github-img]: https://img.shields.io/github/workflow/status/jonniedie/ConcreteStructs.jl/CI
-[github-url]: https://github.com/jonniedie/ConcreteStructs.jl/actions/workflows/CI
+[github-img]: https://img.shields.io/github/workflow/status/SciML/ConcreteStructs.jl/CI
+[github-url]: https://github.com/SciML/ConcreteStructs.jl/actions/workflows/CI
 
-[codecov-img]: https://img.shields.io/codecov/c/github/jonniedie/ConcreteStructs.jl
-[codecov-url]: https://codecov.io/gh/jonniedie/ConcreteStructs.jl
+[codecov-img]: https://img.shields.io/codecov/c/github/SciML/ConcreteStructs.jl
+[codecov-url]: https://codecov.io/gh/SciML/ConcreteStructs.jl
 
 
 ConcreteStructs.jl exports the macro `@concrete`, which can be used to make non-concrete structs
