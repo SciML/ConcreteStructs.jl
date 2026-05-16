@@ -136,7 +136,7 @@ function _make_constructor(struct_name, type_params, type_params_full, lines)
     args = map(x->x.args, field_lines)
     vars = first.(args)
     var_types = last.(args)
-    constructor_params = _get_constructor_params(type_params, var_types)
+    constructor_params = _get_constructor_params(type_params, type_params_full, var_types)
     new_params = _strip_super(type_params_full)
 
     if length(type_params) == length(type_params_full) && all(type_params .== type_params_full)
@@ -158,8 +158,8 @@ end
 
 
 # Get the parameters that are unmatched to variables and need to be annoted in the constructor
-function _get_constructor_params(type_params, var_types)
-    subparams = _get_subparams(type_params)
+function _get_constructor_params(type_params, type_params_full, var_types)
+    subparams = _get_subparams(type_params_full)
     type_params = _strip_super(type_params)
     var_types = [subparams; _strip_super(var_types)]
     return setdiff(type_params, var_types)
@@ -169,7 +169,15 @@ end
 # Strip supertype annotations
 _strip_super(x) = x
 _strip_super(x::Union{Tuple, AbstractVector}) = vcat(_strip_super.(x)...)
-_strip_super(x::Expr) = x.head == :(<:) ? x.args[1] : x
+function _strip_super(x::Expr)
+    if x.head == :(<:)
+        return x.args[1]
+    elseif x.head == :curly
+        return vcat((_strip_super(y) for y in x.args[2:end])...)
+    else
+        return x
+    end
+end
 
 
 # Get the subparameters of supertypes of subtype parameters (sorry)
