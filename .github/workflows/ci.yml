@@ -34,3 +34,18 @@ jobs:
     with:
       coverage: false
     secrets: "inherit"
+  runic:
+    name: Runic
+    uses: "SciML/.github/.github/workflows/runic.yml@v1"
+    secrets: "inherit"
+  spellcheck:
+    name: Spell Check
+    uses: "SciML/.github/.github/workflows/spellcheck.yml@v1"
+    secrets: "inherit"
+  downgrade:
+    name: Downgrade
+    uses: "SciML/.github/.github/workflows/downgrade.yml@v1"
+    with:
+      julia-version: "lts"
+      skip: "Pkg,TOML"
+    secrets: "inherit"
