@@ -17,7 +17,7 @@ julia> complex_whatever = Whatever(1+im, "It's pretty complex")
 Whatever{Complex{Int64}, String}(1 + 1im, "It's pretty complex")
 ```
 
-But maybe we don't want to show the type parameters, since we never cared much about them in the first place. If we want our `struct` to print a little more succintly, we can add the `terse` keyword. Now it will print as if we never added the `@concrete` macro.
+But maybe we don't want to show the type parameters, since we never cared much about them in the first place. If we want our `struct` to print a little more succinctly, we can add the `terse` keyword. Now it will print as if we never added the `@concrete` macro.
 
 ```jldoctest prettier-whatever
 julia> @concrete terse struct PrettierWhatever

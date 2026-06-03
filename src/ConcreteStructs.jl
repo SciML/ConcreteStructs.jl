@@ -75,7 +75,7 @@ macro concrete(terse, expr)
     expr, struct_name, type_params = _concretize(expr)
     struct_name = string(struct_name)
     num_params = length(type_params)
-    
+
     terse_string = if num_params == 0
         struct_name
     else
@@ -85,7 +85,7 @@ macro concrete(terse, expr)
     return quote
         $(Base).@__doc__ $expr
         function Base.show(io::IO, T::Type{<:$(Symbol(struct_name))})
-            if T isa UnionAll
+            return if T isa UnionAll
                 print(io, $struct_name)
             else
                 print(io, $(struct_name) * "{" * join(T.parameters[1:$num_params], ",") * "}")
@@ -110,7 +110,7 @@ function _concretize(expr)
     struct_name, type_params, super = _parse_head(expr.args[2])
     line_tuples = _parse_line.(expr.args[3].args)
     lines = first.(line_tuples)
-    type_params_full = (type_params..., filter(x -> x!==nothing, last.(line_tuples))...)
+    type_params_full = (type_params..., filter(x -> x !== nothing, last.(line_tuples))...)
 
     struct_type = if length(type_params_full) == 0
         struct_name
@@ -122,7 +122,7 @@ function _concretize(expr)
     constructor_expr = _make_constructor(struct_name, type_params, type_params_full, lines)
     body = Expr(:block, lines..., constructor_expr)
     struct_expr = Expr(:struct, is_mutable, head, body)
-    
+
     struct_expr = _apply_original_expr(original_expr, struct_expr)
 
     return struct_expr, struct_name, type_params
@@ -131,9 +131,9 @@ end
 
 # Make the inner constructor function
 function _make_constructor(struct_name, type_params, type_params_full, lines)
-    lines = map(line->line isa Expr && line.head==:(=) ? line.args[1] : line, lines)
+    lines = map(line -> line isa Expr && line.head == :(=) ? line.args[1] : line, lines)
     field_lines = filter(line -> ((line isa Expr) && (line.head === :(::))), lines)
-    args = map(x->x.args, field_lines)
+    args = map(x -> x.args, field_lines)
     vars = first.(args)
     var_types = last.(args)
     constructor_params = _get_constructor_params(type_params, var_types)
@@ -141,7 +141,7 @@ function _make_constructor(struct_name, type_params, type_params_full, lines)
 
     if length(type_params) == length(type_params_full) && all(type_params .== type_params_full)
         return Expr(:block)
-    elseif length(constructor_params)==0
+    elseif length(constructor_params) == 0
         return :(
             function $struct_name($(field_lines...)) where {$(type_params_full...)}
                 return new{$(new_params...)}($(vars...))
@@ -157,7 +157,7 @@ function _make_constructor(struct_name, type_params, type_params_full, lines)
 end
 
 
-# Get the parameters that are unmatched to variables and need to be annoted in the constructor
+# Get the parameters that are unmatched to variables and need to be annotated in the constructor
 function _get_constructor_params(type_params, var_types)
     subparams = _get_subparams(type_params)
     type_params = _strip_super(type_params)
@@ -194,7 +194,7 @@ function _parse_head(head::Expr)
         super = head.args[2]
         struct_name, type_params = _parse_head(head.args[1])
     end
-    
+
     return (struct_name, type_params, super)
 end
 
@@ -219,18 +219,18 @@ function _parse_line(line::Expr)
         field = line.args[1]
         T = line.args[2]
         sym = Symbol(:__T_, field)
-        (:($field::$sym), :($sym<:$T))
+        (:($field::$sym), :($sym <: $T))
     else
         (line, annotation)
     end
 
     return if assignment
-        (:($(out[1])=$val), out[2])
+        (:($(out[1]) = $val), out[2])
     else
         out
     end
 
-    
+
     # if (T isa Symbol && isdefined(Base.Main, T) && !isconcretetype(Base.eval(Base.Main, T))) || T isa Expr
     #     sym = Symbol("__T_" * string(field))
     #     return (:($field::$sym), :($sym<:$T))
