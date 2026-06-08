@@ -1,0 +1,9 @@
+# Test-group matrix consumed by SciML/.github grouped-tests.yml. Each group is
+# dispatched into runtests.jl via the GROUP env var and runs on every Julia
+# version listed here. The QA group (Aqua + JET) carries its own dependencies in
+# test/qa/Project.toml and is not part of the default `All` run's main test env.
+[Core]
+versions = ["lts", "1", "pre"]
+
+[QA]
+versions = ["lts", "1"]
