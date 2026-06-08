@@ -251,7 +251,7 @@ function _find_struct_def(expr; tl_expr = expr)
     elseif expr.head == :macrocall
         return _find_struct_def(expr.args[3]; tl_expr = tl_expr)
     end
-    return nerror("Invalid usage of @concrete.")
+    return error("Invalid usage of @concrete.")
 end
 
 # finds where the struct is defined in original_expr and plugs in struct_expr

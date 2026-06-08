@@ -235,3 +235,11 @@ end
     terse_kw_def = TerseKWDef(b = false)
     @test typeof(terse_kw_def) === TerseKWDef{Float64, Bool}
 end
+
+@testset "Invalid usage error path" begin
+    # `@concrete` applied to something that is neither a struct definition nor a
+    # macrocall wrapping one reaches `_find_struct_def`'s fallthrough, which must
+    # raise a clear `ErrorException` (previously a `nerror` typo made this throw
+    # an `UndefVarError` instead).
+    @test_throws "Invalid usage of @concrete." @macroexpand(@concrete x = 1)
+end
