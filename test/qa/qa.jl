@@ -1,12 +1,13 @@
+using SciMLTesting: run_qa
 using ConcreteStructs
 using Aqua
 using JET
 using Test
 
-@testset "Code quality (Aqua.jl)" begin
-    Aqua.test_all(ConcreteStructs)
-end
-
-@testset "Code linting (JET.jl)" begin
-    JET.test_package(ConcreteStructs; target_defined_modules = true)
-end
+run_qa(
+    ConcreteStructs;
+    Aqua = Aqua,
+    JET = JET,
+    jet = true,
+    jet_kwargs = (; target_defined_modules = true),
+)
