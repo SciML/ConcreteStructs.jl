@@ -1,12 +1,13 @@
-using ConcreteStructs
-using Aqua
-using JET
-using Test
+using SafeTestsets
 
-@testset "Code quality (Aqua.jl)" begin
+@safetestset "Code quality (Aqua.jl)" begin
+    using ConcreteStructs
+    using Aqua
     Aqua.test_all(ConcreteStructs)
 end
 
-@testset "Code linting (JET.jl)" begin
+@safetestset "Code linting (JET.jl)" begin
+    using ConcreteStructs
+    using JET
     JET.test_package(ConcreteStructs; target_defined_modules = true)
 end
