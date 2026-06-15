@@ -193,6 +193,8 @@ function _parse_head(head::Expr)
     elseif head.head === :(<:)
         super = head.args[2]
         struct_name, type_params = _parse_head(head.args[1])
+    else
+        error("Invalid usage of @concrete.")
     end
 
     return (struct_name, type_params, super)
@@ -210,6 +212,7 @@ _parse_line(line) = (line, nothing)
 function _parse_line(line::Expr)
     assignment = line.head === :(=)
     annotation = nothing
+    val = nothing
     if assignment
         val = line.args[2]
         line, annotation = _parse_line(line.args[1])
