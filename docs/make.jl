@@ -18,7 +18,6 @@ makedocs(
     ),
     repo = GitHub("jonniedie/ConcreteStructs.jl"),
     authors = "Jonnie Diegelman",
-    warnonly = [:missing_docs],
 )
 
 # Documenter can also automatically deploy documentation to gh-pages.
