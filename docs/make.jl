@@ -18,6 +18,8 @@ makedocs(
     ),
     repo = GitHub("jonniedie/ConcreteStructs.jl"),
     authors = "Jonnie Diegelman",
+    doctest = true,
+    checkdocs = :exports,
 )
 
 # Documenter can also automatically deploy documentation to gh-pages.
