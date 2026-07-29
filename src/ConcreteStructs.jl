@@ -29,22 +29,22 @@ julia> @concrete struct AB
            b
        end
 
-julia> ab = AB("hi", 1+im)
+julia> ab = AB("hi", 1 + im)
 AB{String, Complex{Int64}}("hi", 1 + 1im)
 
 julia> @concrete terse mutable struct CDE{D} <: Number
-            d::D
-            c
-            e::Symbol
-        end
+           d::D
+           c
+           e::Symbol
+       end
 
-julia> cde = CDE(1f0, (1,2.0), :yo)
+julia> cde = CDE(1.0f0, (1, 2.0), :yo)
 CDE{Float32}(1.0f0, (1, 2.0), :yo)
 
 julia> typeof(cde)
 CDE{Float32,Tuple{Int64, Float64}}
 
-julia> @concrete terse struct FGH{T,N,G<:AbstractArray{T,N}} <: AbstractArray{T,N}
+julia> @concrete terse struct FGH{T, N, G <: AbstractArray{T, N}} <: AbstractArray{T, N}
            f
            g::G
            h::T
@@ -54,7 +54,7 @@ julia> Base.size(x::FGH) = size(x.g);
 
 julia> Base.getindex(x::FGH, i...) = getindex(x.g[i...]);
 
-julia> fgh = FGH(nothing, [1,2,3], 4)
+julia> fgh = FGH(nothing, [1, 2, 3], 4)
 3-element FGH{Int64,1,Vector{Int64}}:
  1
  2
