@@ -269,4 +269,17 @@ function _apply_original_expr(original_expr, struct_expr)
     return original_expr
 end
 
+using PrecompileTools: @compile_workload, @setup_workload
+
+@setup_workload begin
+    @compile_workload begin
+        expression = quote
+            @concrete struct PrecompileExample
+                value
+            end
+        end
+        macroexpand(@__MODULE__, expression)
+    end
+end
+
 end

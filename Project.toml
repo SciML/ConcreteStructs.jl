@@ -3,8 +3,12 @@ uuid = "2569d6c7-a4a2-43d3-a901-331e8e4be471"
 authors = ["Jonnie Diegelman <jonniediegelman@gmail.com> and contributors"]
 version = "0.2.7"
 
+[deps]
+PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
+
 [compat]
 LinearAlgebra = "1"
+PrecompileTools = "1.2"
 SafeTestsets = "0.0.1, 0.1, 1"
 SciMLTesting = "2.4"
 Suppressor = "0.2.8"
