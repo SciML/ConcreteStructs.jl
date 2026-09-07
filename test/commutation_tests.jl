@@ -9,7 +9,7 @@ Base.@kwdef @concrete struct Foo2{T <: Real}
 end
 
 foo = Foo2()
-@test typeof(foo) === Foo2{Float64, Bool, Int64}
+@test typeof(foo) === Foo2{Float64, Bool, Int}
 
 # this is new
 @concrete Base.@kwdef struct Foo3{T <: Real}
@@ -19,10 +19,10 @@ foo = Foo2()
 end
 
 foo = Foo3()
-@test typeof(foo) === Foo3{Float64, Bool, Int64}
+@test typeof(foo) === Foo3{Float64, Bool, Int}
 
 foo = Foo3(z = [1, 2, 3])
-@test typeof(foo) === Foo3{Float64, Bool, Vector{Int64}}
+@test typeof(foo) === Foo3{Float64, Bool, Vector{Int}}
 
 # terse test case, unfortunately doesn't work the other way around. But also never did.
 @concrete terse Base.@kwdef struct TerseKWDef
